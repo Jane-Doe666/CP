@@ -8,11 +8,19 @@ const Users = () => {
         setUsers((prevState) => (prevState.filter((user) => user._id !== id)))
     };
 
-    const renderCountUsers = () => {
-        if (users.length === 0) return "Никто не будет тусить с тобой!";
-        if (users.length >= 2 && users.length <= 4) return `${users.length} человека тусанет с тобой сегодня`;
-        return `${users.length} человек тусанет с тобой сегодня`
+    const getPersonPlural = (count) => {
+        return (
+            [2, 3, 4].includes(count % 10) &&
+            ![12, 13, 14].includes(count % 100)
+                ? 'человека' : 'человек'
+        );
+    }
 
+    const prepareTitle = () => {
+        const count = users.length;
+        return count === 0
+            ? "Никто не будет тусить с тобой!"
+            : `${count} ${getPersonPlural(count)} тусанет с тобой сегодня`;
     };
 
     const getColorCountUsers = () => {
@@ -47,8 +55,8 @@ const Users = () => {
     };
 
     return (<>
-            <h1><span className={getColorCountUsers()}>{renderCountUsers()}</span></h1>
-            <table className="table">
+            <h1><span className={getColorCountUsers()}>{prepareTitle()}</span></h1>
+            {users.length !== 0 && <table className="table">
                 <thead>
                 <tr>
                     <th scope="col">Имя</th>
@@ -61,7 +69,7 @@ const Users = () => {
                 <tbody>
                 {renderUsersInfo()}
                 </tbody>
-            </table>
+            </table>}
         </>
     )
 }
